@@ -11,3 +11,12 @@
 *.lai
 *.la
 *.a
+
+
+CMakeFiles/
+cmake_install.*
+Makefile*
+CMakeCache*
+log
+*.exe
+*.out

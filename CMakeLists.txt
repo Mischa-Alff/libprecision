@@ -22,4 +22,12 @@ set(INC_DIR "include")
 set(
 	SOURCES
 	${INC_DIR}/${CMAKE_PROJECT_NAME}/libprecision.hpp
+	${INC_DIR}/${CMAKE_PROJECT_NAME}/types/uint128_t.hpp
+	${SRC_DIR}/${CMAKE_PROJECT_NAME}/types/uint128_t.cpp
 )
+
+add_library(${CMAKE_PROJECT_NAME} ${SOURCES})
+
+if(LIBPRECISION_BUILD_TESTS)
+	include(tests/CMakeLists.txt)
+endif()
