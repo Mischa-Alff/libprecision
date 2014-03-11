@@ -1,56 +1,109 @@
+#include <bitset>
+
 class uint128_t
 {
 private:
-	uint64_t upper, lower;
-	static constexpr uint8_t size_bits_half = sizeof(uint64_t)*8;
-	static constexpr uint8_t size_bits = sizeof(uint64_t)*8*2;
+	std::bitset<128> bits;
 public:
-
-	uint128_t operator&(const uint8_t bit) const
+	const std::bitset<128> &get_bits() const
 	{
-		if(bit < size_bits_half)
-			return lower&bit;
-
-		else
-			return {upper&(bit-size_bits_half), lower};
-
-		return 0;
+		return bits;
 	}
 
-	uint128_t operator~() const
+	void set_bits(const std::bitset<128> &new_bits)
 	{
-		return {~upper, ~lower};
+		bits = new_bits;
 	}
 
-	bool operator==(const uint128_t &right) const
+	std::string get_string() const
 	{
-		return (upper == right.upper) && (lower == right.lower);
+		return bits.to_string();
 	}
 
-	bool operator==(const uint64_t &right) const
+	operator std::bitset<128>&()
 	{
-		return (lower == right) && (upper == 0);
+		return bits;
 	}
 
-	bool operator!=(const uint128_t &right) const
+	uint128_t operator<<(const size_t &pos) const
 	{
-		return (upper != right.upper) || (lower != right.lower);
+		return {bits<<pos};
 	}
 
-	bool operator!=(const uint64_t &right) const
+	uint128_t &operator<<=(const size_t &pos)
 	{
-		return (lower != right) || (upper != 0);
+		bits<<=pos;
+		return *this;
 	}
 
-	uint128_t(uint64_t src_upper, uint64_t src_lower)
+	uint128_t operator>>(const size_t &pos) const
 	{
-		upper = src_upper;
-		lower = src_lower;
+		return {bits>>pos};
 	}
 
-	uint128_t(uint64_t src_lower)
+	uint128_t &operator>>=(const size_t &pos)
 	{
-		upper = 0;
-		lower = src_lower;
+		bits>>=pos;
+		return *this;
 	}
+
+	uint128_t &operator&=(const uint128_t &right)
+	{
+		bits&=right.get_bits();
+		return *this;
+	}
+
+	uint128_t &operator|=(const uint128_t &right)
+	{
+		bits|=right.get_bits();
+		return *this;
+	}
+
+	uint128_t &operator^=(const uint128_t &right)
+	{
+		bits^=right.get_bits();
+		return *this;
+	}
+
+	uint128_t operator~()
+	{
+		return {~bits};
+	}
+
+	const bool operator==(const uint128_t &right) const
+	{
+		return bits==right.get_bits();
+	}
+
+	const bool operator!=(const uint128_t &right) const
+	{
+		return bits!=right.get_bits();
+	}
+
+	uint128_t() : bits() {}
+
+	uint128_t(const std::string &str) : bits{str} {}
+
+	uint128_t(const std::bitset<128> &bitset) : bits{bitset} {}
+
 };
+
+uint128_t operator&(const uint128_t &left, const uint128_t &right)
+{
+	return {left.get_bits()&right.get_bits()};
+}
+
+uint128_t operator|(const uint128_t &left, const uint128_t &right)
+{
+	return {left.get_bits()|right.get_bits()};
+}
+
+uint128_t operator^(const uint128_t &left, const uint128_t &right)
+{
+	return {left.get_bits()^right.get_bits()};
+}
+
+std::ostream& operator<<(std::ostream &stream, const uint128_t &obj)
+{
+	return stream << obj.get_bits();
+}
