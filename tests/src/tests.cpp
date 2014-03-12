@@ -8,184 +8,332 @@
 #include <bitset>
 #include <string>
 
-std::string bs_string =
-	"1010101010101010101010101010101010101010101010101010101010101010"
-	"1010101010101010101010101010101010101010101010101010101010101010";
-
-std::bitset<128> bs{bs_string};
-
-TEST(uint128_t, initialize_bitset)
+std::string operator*(const std::string &left, const int &right)
 {
-	ASSERT_EQ(uint128_t(bs).get_bits(), bs);
+	std::string ret;
+	for(int i = 0; i < right; ++i)
+		ret += left;
+	return ret;
 }
 
-TEST(uint128_t, function_get_string)
+using namespace prec;
+
+const std::size_t test_precision = 32;
+
+const std::string test_bs_string = std::string("10")*(test_precision/2);
+std::bitset<test_precision> test_bs{test_bs_string};
+
+TEST(UnsignedInteger, initializer_bitset)
 {
 	ASSERT_EQ(
-		uint128_t(bs).get_string(),
-		"1010101010101010101010101010101010101010101010101010101010101010"
-		"1010101010101010101010101010101010101010101010101010101010101010"	
+		UnsignedInteger<test_precision>(test_bs).get_bits(),
+		test_bs
 	);
 }
 
-TEST(uint128_t, initialize_string)
+TEST(UnsignedInteger, operator_cast_bitset)
 {
 	ASSERT_EQ(
-		uint128_t(
-			"1010101010101010101010101010101010101010101010101010101010101010"
-			"1010101010101010101010101010101010101010101010101010101010101010"
-		).get_string(),
-		"1010101010101010101010101010101010101010101010101010101010101010"
-		"1010101010101010101010101010101010101010101010101010101010101010"
+		UnsignedInteger<test_precision>(test_bs),
+		test_bs
 	);
 }
 
-TEST(uint128_t, function_get_set_bits)
+TEST(UnsignedInteger, function_get_string)
 {
-	uint128_t a;
-	a.set_bits(bs);
-
+	test_bs = std::bitset<test_precision>(test_bs_string);
 	ASSERT_EQ(
-		a.get_bits(),
-		bs
+		UnsignedInteger<test_precision>(test_bs).get_string(),
+		test_bs_string
 	);
 }
 
-TEST(uint128_t, operator_bitset)
+TEST(UnsignedInteger, initializer_string)
 {
-	ASSERT_EQ(uint128_t(bs), bs);
-}
-
-TEST(uint128_t, operator_bitwise_shift_left)
-{
-	bs = std::bitset<128>(bs_string);
-	uint128_t a(bs);
-	for(int i = 0; i < bs.size(); i++)
-		ASSERT_EQ(a<<i, bs<<i);
-}
-
-TEST(uint128_t, operator_equals_bitwise_shift_left)
-{
-	bs = std::bitset<128>(bs_string);
-	uint128_t a(bs);
-	for(int i = 0; i < bs.size(); i++)
-		ASSERT_EQ(a<<=i, bs<<=i);
-}
-
-TEST(uint128_t, operator_bitwise_shift_right)
-{
-	bs = std::bitset<128>(bs_string);
-	uint128_t a(bs);
-	for(int i = 0; i < bs.size(); i++)
-		ASSERT_EQ(a>>i, bs>>i);
-}
-
-TEST(uint128_t, operator_equals_bitwise_shift_right)
-{
-	bs = std::bitset<128>(bs_string);
-	uint128_t a(bs);
-	for(int i = 0; i < bs.size(); i++)
-		ASSERT_EQ(a>>=i, bs>>=i);
-}
-
-TEST(uint128_t, operator_bitwise_and)
-{
-	bs = std::bitset<128>(bs_string);
 	ASSERT_EQ(
-		(uint128_t(bs)&std::bitset<128>("111111")),
-		(bs&std::bitset<128>("111111"))
+		UnsignedInteger<test_precision>(test_bs_string).get_string(),
+		test_bs_string
 	);
 }
 
-TEST(uint128_t, operator_equals_bitwise_and)
+TEST(UnsignedInteger, function_get_bits)
 {
-	bs = std::bitset<128>(bs_string);
-	uint128_t a(bs);
 	ASSERT_EQ(
-		(a &=std::bitset<128>("111111")),
-		(bs&=std::bitset<128>("111111"))
+		UnsignedInteger<test_precision>(test_bs).get_bits(),
+		test_bs
 	);
 }
 
-TEST(uint128_t, operator_bitwise_or)
+TEST(UnsignedInteger, function_set_bits)
 {
-	bs = std::bitset<128>(bs_string);
 	ASSERT_EQ(
-		(uint128_t(bs)|std::bitset<128>("111111")),
-		(bs|std::bitset<128>("111111"))
+		UnsignedInteger<test_precision>(test_bs).get_bits(),
+		test_bs
 	);
 }
 
-TEST(uint128_t, operator_equals_bitwise_or)
+TEST(UnsignedInteger, operator_bitwise_shift_left)
 {
-	bs = std::bitset<128>(bs_string);
-	uint128_t a(bs);
 	ASSERT_EQ(
-		(a |=std::bitset<128>("111111")),
-		(bs|=std::bitset<128>("111111"))
+		UnsignedInteger<test_precision>(test_bs)<<4,
+		test_bs<<4
 	);
 }
 
-TEST(uint128_t, operator_bitwise_xor)
+TEST(UnsignedInteger, operator_equals_bitwise_shift_left)
 {
-	bs = std::bitset<128>(bs_string);
+	UnsignedInteger<test_precision> a(test_bs);
+	a<<=4;
 	ASSERT_EQ(
-		(uint128_t(bs)^std::bitset<128>("111111")),
-		(bs^std::bitset<128>("111111"))
+		a,
+		test_bs<<4
 	);
 }
 
-TEST(uint128_t, operator_equals_bitwise_xor)
+TEST(UnsignedInteger, operator_bitwise_shift_right)
 {
-	bs = std::bitset<128>(bs_string);
-	uint128_t a(bs);
 	ASSERT_EQ(
-		(a ^=std::bitset<128>("111111")),
-		(bs^=std::bitset<128>("111111"))
+		UnsignedInteger<test_precision>(test_bs)>>4,
+		test_bs>>4
 	);
 }
 
-TEST(uint128_t, operator_bitwise_not)
+TEST(UnsignedInteger, operator_equals_bitwise_shift_right)
 {
-	bs = std::bitset<128>(bs_string);
+	UnsignedInteger<test_precision> a(test_bs);
+	a>>=4;
 	ASSERT_EQ(
-		(~uint128_t(bs)),
-		(~bs)
+		a,
+		test_bs>>4
 	);
 }
 
-TEST(uint128_t, operator_equality)
+TEST(UnsignedInteger, operator_bitwise_and)
 {
-	bs = std::bitset<128>(bs_string);
+	ASSERT_EQ(
+		UnsignedInteger<test_precision>(test_bs)&123,
+		test_bs&std::bitset<test_precision>{123}
+	);
+}
+
+TEST(UnsignedInteger, operator_equals_bitwise_and)
+{
+	UnsignedInteger<test_precision> a(test_bs);
+	a&=123;
+	ASSERT_EQ(
+		a,
+		test_bs&std::bitset<test_precision>{123}
+	);
+}
+
+TEST(UnsignedInteger, operator_bitwise_xor)
+{
+	ASSERT_EQ(
+		UnsignedInteger<test_precision>(test_bs)^UnsignedInteger<test_precision>{"1111111"},
+		test_bs^std::bitset<test_precision>{"1111111"}
+	);
+}
+
+TEST(UnsignedInteger, operator_equals_bitwise_xor)
+{
+	UnsignedInteger<test_precision> a(test_bs);
+	a^=UnsignedInteger<test_precision>{"1111111"};
+	ASSERT_EQ(
+		a,
+		test_bs^std::bitset<test_precision>{"1111111"}
+	);
+}
+
+TEST(UnsignedInteger, operator_bitwise_not)
+{
+	ASSERT_EQ(
+		~UnsignedInteger<test_precision>(test_bs),
+		~test_bs
+	);
+}
+
+TEST(UnsignedInteger, operator_comparison_equality)
+{
 	ASSERT_TRUE(
-		uint128_t(bs) == uint128_t(bs)
+		UnsignedInteger<test_precision>(test_bs) == UnsignedInteger<test_precision>(test_bs)
 	);
-
 	ASSERT_FALSE(
-		uint128_t(bs) == uint128_t()
+		UnsignedInteger<test_precision>(test_bs)+1 == UnsignedInteger<test_precision>(test_bs)
 	);
 }
 
-TEST(uint128_t, operator_no_equality)
+TEST(UnsignedInteger, operator_comparison_no_equality)
 {
-	bs = std::bitset<128>(bs_string);
 	ASSERT_TRUE(
-		uint128_t(bs) != uint128_t()
+		UnsignedInteger<test_precision>(test_bs)+1 != UnsignedInteger<test_precision>(test_bs)
 	);
-
 	ASSERT_FALSE(
-		uint128_t(bs) != uint128_t(bs)
+		UnsignedInteger<test_precision>(test_bs) != UnsignedInteger<test_precision>(test_bs)
 	);
 }
 
-TEST(uint128_t, operator_addition)
+TEST(UnsignedInteger, operator_comparison_greater)
 {
-	ASSERT_EQ(uint128_t(10)+uint128_t(11), uint128_t(21));
+	ASSERT_TRUE(
+		UnsignedInteger<test_precision>(1)+1 > UnsignedInteger<test_precision>(1)
+	);
+	ASSERT_FALSE(
+		UnsignedInteger<test_precision>(1) > UnsignedInteger<test_precision>(1)
+	);
+	ASSERT_FALSE(
+		UnsignedInteger<test_precision>(1)-1 > UnsignedInteger<test_precision>(1)
+	);
 }
 
-TEST(uint128_t, operator_subtraction)
+TEST(UnsignedInteger, operator_comparison_greater_equal)
 {
-	ASSERT_EQ(uint128_t(11)-uint128_t(10), uint128_t(1));
+	ASSERT_TRUE(
+		UnsignedInteger<test_precision>(1)+1 >= UnsignedInteger<test_precision>(1)
+	);
+	ASSERT_TRUE(
+		UnsignedInteger<test_precision>(1) >= UnsignedInteger<test_precision>(1)
+	);
+	ASSERT_FALSE(
+		UnsignedInteger<test_precision>(1)-1 >= UnsignedInteger<test_precision>(1)
+	);
+}
+
+TEST(UnsignedInteger, operator_comparison_less)
+{
+	ASSERT_TRUE(
+		UnsignedInteger<test_precision>(1)-1 < UnsignedInteger<test_precision>(1)
+	);
+	ASSERT_FALSE(
+		UnsignedInteger<test_precision>(1) < UnsignedInteger<test_precision>(1)
+	);
+	ASSERT_FALSE(
+		UnsignedInteger<test_precision>(1)+1 < UnsignedInteger<test_precision>(1)
+	);
+}
+
+TEST(UnsignedInteger, operator_comparison_less_equal)
+{
+	ASSERT_TRUE(
+		UnsignedInteger<test_precision>(1)-1 <= UnsignedInteger<test_precision>(1)
+	);
+	ASSERT_TRUE(
+		UnsignedInteger<test_precision>(1) <= UnsignedInteger<test_precision>(1)
+	);
+	ASSERT_FALSE(
+		UnsignedInteger<test_precision>(1)+1 <= UnsignedInteger<test_precision>(1)
+	);
+}
+
+TEST(UnsignedInteger, operator_arithmetic_addition)
+{
+	ASSERT_EQ(
+		UnsignedInteger<test_precision>(10)+1234,
+		UnsignedInteger<test_precision>(1244)
+	);
+}
+
+TEST(UnsignedInteger, operator_equals_arithmetic_addition)
+{
+	UnsignedInteger<test_precision> a(10);
+	a += 1234;
+	ASSERT_EQ(
+		a,
+		UnsignedInteger<test_precision>(1244)
+	);
+}
+
+TEST(UnsignedInteger, operator_arithmetic_subtraction)
+{
+	ASSERT_EQ(
+		UnsignedInteger<test_precision>(1234)-10,
+		UnsignedInteger<test_precision>(1224)
+	);
+}
+
+TEST(UnsignedInteger, operator_equals_arithmetic_subtraction)
+{
+	UnsignedInteger<test_precision> a(1234);
+	a -= 10;
+	ASSERT_EQ(
+		a,
+		UnsignedInteger<test_precision>(1224)
+	);
+}
+
+TEST(UnsignedInteger, operator_arithmetic_multiplication)
+{
+	ASSERT_EQ(
+		UnsignedInteger<test_precision>(2)*64,
+		UnsignedInteger<test_precision>(128)
+	);
+}
+
+TEST(UnsignedInteger, operator_equals_arithmetic_multiplication)
+{
+	UnsignedInteger<test_precision> a(64);
+	a *= 2;
+	ASSERT_EQ(
+		a,
+		UnsignedInteger<test_precision>(128)
+	);
+}
+
+TEST(UnsignedInteger, operator_arithmetic_division)
+{
+	ASSERT_EQ(
+		UnsignedInteger<test_precision>(128)/2,
+		UnsignedInteger<test_precision>(64)
+	);
+}
+
+TEST(UnsignedInteger, operator_equals_arithmetic_division)
+{
+	UnsignedInteger<test_precision> a(128);
+	a /= 2;
+	ASSERT_EQ(
+		a,
+		UnsignedInteger<test_precision>(64)
+	);
+}
+
+TEST(UnsignedInteger, operator_modifier_increment_prefix)
+{
+	UnsignedInteger<test_precision> a(1234);
+	++a;
+	ASSERT_EQ(
+		a,
+		UnsignedInteger<test_precision>(1234)+1
+	);
+}
+
+TEST(UnsignedInteger, operator_modifier_increment_postfix)
+{
+	UnsignedInteger<test_precision> a(1234);
+	a++;
+	ASSERT_EQ(
+		a,
+		UnsignedInteger<test_precision>(1234)+1
+	);
+}
+
+TEST(UnsignedInteger, operator_modifier_decrement_prefix)
+{
+	UnsignedInteger<test_precision> a(1234);
+	--a;
+	ASSERT_EQ(
+		a,
+		UnsignedInteger<test_precision>(1234)-1
+	);
+}
+
+TEST(UnsignedInteger, operator_modifier_decrement_postfix)
+{
+	UnsignedInteger<test_precision> a(1234);
+	a--;
+	ASSERT_EQ(
+		a,
+		UnsignedInteger<test_precision>(1234)-1
+	);
 }
 
 int main(int argc, char **argv)

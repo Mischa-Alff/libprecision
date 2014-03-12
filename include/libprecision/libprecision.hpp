@@ -1,1 +1,3 @@
-#include <libprecision/types/uint128_t.hpp>
+#include <libprecision/types/UnsignedInteger.hpp>
+
+namespace prec = precision;
