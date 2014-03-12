@@ -178,6 +178,16 @@ TEST(uint128_t, operator_no_equality)
 	);
 }
 
+TEST(uint128_t, operator_addition)
+{
+	ASSERT_EQ(uint128_t(10)+uint128_t(11), uint128_t(21));
+}
+
+TEST(uint128_t, operator_subtraction)
+{
+	ASSERT_EQ(uint128_t(11)-uint128_t(10), uint128_t(1));
+}
+
 int main(int argc, char **argv)
 {
 	::testing::InitGoogleTest(&argc, argv);

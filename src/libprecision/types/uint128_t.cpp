@@ -98,6 +98,59 @@ uint128_t operator^(const uint128_t &left, const uint128_t &right)
 	return {left.get_bits()^right.get_bits()};
 }
 
+
+uint128_t operator+(const uint128_t &left, const uint128_t &right)
+{
+	std::bitset<128> ret;
+	bool carry = false;
+
+	for(size_t i = 0; i < ret.size(); ++i)
+	{
+		if(left.get_bits()[i] && right.get_bits()[i])
+		{
+			ret[i] = carry;
+			carry = true;
+		}
+		else if(left.get_bits()[i] || right.get_bits()[i])
+		{
+			ret[i] = !carry;
+		}
+		else
+		{
+			ret[i] = carry;
+			carry = false;
+		}
+	}
+
+	return {ret};
+}
+
+uint128_t operator-(const uint128_t &left, const uint128_t &right)
+{
+	std::bitset<128> ret;
+	bool carry = false;
+
+	for(size_t i = 0; i < ret.size(); ++i)
+	{
+		if(left.get_bits()[i] && right.get_bits()[i])
+		{
+			ret[i] = carry;
+		}
+		else if(left.get_bits()[i] || right.get_bits()[i])
+		{
+			ret[i] = !carry;
+			carry = right.get_bits()[i];
+		}
+		else
+		{
+			ret[i] = carry;
+		}
+	}
+
+	return {ret};
+}
+
+
 std::ostream& operator<<(std::ostream &stream, const uint128_t &obj)
 {
 	return stream << obj.get_bits();
