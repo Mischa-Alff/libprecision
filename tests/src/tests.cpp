@@ -18,7 +18,7 @@ std::string operator*(const std::string &left, const int &right)
 
 using namespace prec;
 
-const std::size_t test_precision = 32;
+const std::size_t test_precision = 128;
 
 const std::string test_bs_string = std::string("10")*(test_precision/2);
 std::bitset<test_precision> test_bs{test_bs_string};
