@@ -4,6 +4,7 @@ project( libprecision_tests )
 
 set( TEST_SOURCES
 	tests/src/tests.cpp
+	tests/src/UnsignedInteger.hpp
 )
 
 LINK_LIBRARIES()
